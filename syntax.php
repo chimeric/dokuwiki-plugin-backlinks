@@ -11,6 +11,7 @@ if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
 if(!defined('DW_LF')) define('DW_LF',"\n");
 
 require_once(DOKU_PLUGIN.'syntax.php');
+require_once(DOKU_INC.'inc/parserutils.php');
 
 /**
  * All DokuWiki plugins to extend the parser/rendering mechanism
@@ -26,7 +27,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return array(
             'author' => 'Michael Klier',
             'email'  => 'chi@chimeric.de',
-            'date'   => '2006-10-12',
+            'date'   => '2006-10-31',
             'name'   => 'Backlinks',
             'desc'   => 'Displays backlinks to a given page.',
             'url'    => 'http://www.chimeric.de/dokuwiki/plugins/backlinks'
@@ -82,8 +83,9 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
                 $renderer->doc .= '<ul class="idx">';
 
                 foreach($backlinks as $backlink){
+                    $name = p_get_metadata($backlink,'title');
                     $renderer->doc .= '<li><div class="li">';
-                    $renderer->doc .= html_wikilink(':'.$backlink,$conf['useheading']?NULL:preg_replace("/.*?:/",'',$backlink));
+                    $renderer->doc .= html_wikilink($backlink,$name,'');
                     $renderer->doc .= '</div></li>';
                 }
 
