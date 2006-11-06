@@ -56,26 +56,25 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, &$handler){
         global $ID;
 
-        @require_once(DOKU_INC.'inc/fulltext.php');
-
         $id = substr($match,12,-2); //strip {{backlinks> from start and }} from end
 
         if($id == '.') $id = $ID;
 
         resolve_pageid(getNS($ID),$id,$exits);
 
-        $backlinks = ft_backlinks($id);
-
-        return ($backlinks);
+        return (array($id));
     }
 
     /**
      * Handles the actual output creation.
      */
-    function render($mode, &$renderer, $backlinks) {
+    function render($mode, &$renderer, $data) {
 
         if($mode == 'xhtml'){
             $renderer->info['cache'] = false;
+            
+            @require_once(DOKU_INC.'inc/fulltext.php');
+            $backlinks = ft_backlinks($data[0]);
 
             if(!empty($backlinks)) {
 
@@ -84,6 +83,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
 
                 foreach($backlinks as $backlink){
                     $name = p_get_metadata($backlink,'title');
+                    if(empty($name)) $name = $backlink;
                     $renderer->doc .= '<li><div class="li">';
                     $renderer->doc .= html_wikilink($backlink,$name,'');
                     $renderer->doc .= '</div></li>';
