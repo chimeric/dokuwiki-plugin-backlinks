@@ -27,7 +27,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return array(
             'author' => 'Michael Klier',
             'email'  => 'chi@chimeric.de',
-            'date'   => '2006-10-31',
+            'date'   => '2006-11-07',
             'name'   => 'Backlinks',
             'desc'   => 'Displays backlinks to a given page.',
             'url'    => 'http://www.chimeric.de/dokuwiki/plugins/backlinks'
@@ -56,13 +56,12 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, &$handler){
         global $ID;
 
-        $id = substr($match,12,-2); //strip {{backlinks> from start and }} from end
+        $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
+        $match = ($match == '.') ? cleanID($ID) : cleanID($match);
 
-        if($id == '.') $id = $ID;
+        resolve_pageid(getNS(cleanID($ID)),$match,$exists);
 
-        resolve_pageid(getNS($ID),$id,$exits);
-
-        return (array($id));
+        return (array($match));
     }
 
     /**
