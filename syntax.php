@@ -27,7 +27,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return array(
             'author' => 'Michael Klier',
             'email'  => 'chi@chimeric.de',
-            'date'   => '2006-11-07',
+            'date'   => '2006-11-08',
             'name'   => 'Backlinks',
             'desc'   => 'Displays backlinks to a given page.',
             'url'    => 'http://www.chimeric.de/dokuwiki/plugins/backlinks'
@@ -68,6 +68,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * Handles the actual output creation.
      */
     function render($mode, &$renderer, $data) {
+        global $ID;
 
         if($mode == 'xhtml'){
             $renderer->info['cache'] = false;
@@ -84,7 +85,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
                     $name = p_get_metadata($backlink,'title');
                     if(empty($name)) $name = $backlink;
                     $renderer->doc .= '<li><div class="li">';
-                    $renderer->doc .= html_wikilink($backlink,$name,'');
+                    $renderer->doc .= html_wikilink(':'.$backlink,$name,'');
                     $renderer->doc .= '</div></li>';
                 }
 
