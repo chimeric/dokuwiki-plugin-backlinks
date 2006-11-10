@@ -57,9 +57,11 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         global $ID;
 
         $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
-        $match = ($match == '.') ? cleanID($ID) : cleanID($match);
+        $match = ($match == '.') ? $ID : $match;
 
-        resolve_pageid(getNS(cleanID($ID)),$match,$exists);
+        if(strstr($match,".:")) {
+            resolve_pageid(getNS($ID),$match,$exists);
+        }
 
         return (array($match));
     }
@@ -68,7 +70,6 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * Handles the actual output creation.
      */
     function render($mode, &$renderer, $data) {
-        global $ID;
 
         if($mode == 'xhtml'){
             $renderer->info['cache'] = false;
