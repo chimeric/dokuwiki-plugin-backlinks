@@ -27,10 +27,10 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return array(
             'author' => 'Michael Klier',
             'email'  => 'chi@chimeric.de',
-            'date'   => '2006-11-10',
+            'date'   => '2006-01-03',
             'name'   => 'Backlinks',
             'desc'   => 'Displays backlinks to a given page.',
-            'url'    => 'http://www.chimeric.de/dokuwiki/plugins/backlinks'
+            'url'    => 'http://www.chimeric.de/projects/dokuwiki/plugin/backlinks'
         );
     }
 
