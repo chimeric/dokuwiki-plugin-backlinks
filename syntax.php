@@ -1,6 +1,12 @@
 <?php
 /**
  * DokuWiki Syntax Plugin Backlinks
+ *
+ * Shows a list of pages that link back to a given page.
+ *
+ * Syntax:  {{backlinks>[pagename]}}
+ *
+ *   [pagename] - a valid wiki pagename
  * 
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  Michael Klier <chi@chimeric.de>
@@ -99,4 +105,4 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return false;
     }
 }
-//Setup VIM: ex: et ts=4 enc=utf-8 :
+//setup vim:ts=4:sw=4:enc=utf-8:
