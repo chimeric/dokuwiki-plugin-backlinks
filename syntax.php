@@ -33,7 +33,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return array(
             'author' => 'Michael Klier',
             'email'  => 'chi@chimeric.de',
-            'date'   => '2006-01-03',
+            'date'   => '2007-08-13',
             'name'   => 'Backlinks',
             'desc'   => 'Displays backlinks to a given page.',
             'url'    => 'http://www.chimeric.de/projects/dokuwiki/plugin/backlinks'
@@ -76,16 +76,18 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * Handles the actual output creation.
      */
     function render($mode, &$renderer, $data) {
+        global $lang;
 
         if($mode == 'xhtml'){
             $renderer->info['cache'] = false;
             
             @require_once(DOKU_INC.'inc/fulltext.php');
             $backlinks = ft_backlinks($data[0]);
+            
+            $renderer->doc .= '<div id="plugin__backlinks">' . DW_LF;
 
             if(!empty($backlinks)) {
 
-                $renderer->doc .= '<div id="plugin__backlinks">' . DW_LF;
                 $renderer->doc .= '<ul class="idx">';
 
                 foreach($backlinks as $backlink){
@@ -97,8 +99,11 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
                 }
 
                 $renderer->doc .= '</ul>';
-                $renderer->doc .= '</div>' . DW_LF;
+            } else {
+                $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>";
             }
+            
+            $renderer->doc .= '</div>' . DW_LF;
 
             return true;
         }
