@@ -34,7 +34,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return array(
             'author' => 'Michael Klier',
             'email'  => 'chi@chimeric.de',
-            'date'   => '2007-08-13',
+            'date'   => '2008-03-21',
             'name'   => 'Backlinks',
             'desc'   => 'Displays backlinks to a given page.',
             'url'    => 'http://www.chimeric.de/projects/dokuwiki/plugin/backlinks'
@@ -54,7 +54,8 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * Connect pattern to lexer
      */
     function connectTo($mode) {
-        $this->Lexer->addSpecialPattern('\{\{backlinks>.+?\}\}',$mode,'plugin_backlinks');
+        $this->Lexer->addSpecialPattern('\{\{backlinks>.+?\}\}', $mode, 'plugin_backlinks');
+        $this->Lexer->addSpecialPattern('~~BACKLINKS~~', $mode, 'plugin_backlinks');
     }
 
     /**
@@ -63,11 +64,15 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
     function handle($match, $state, $pos, &$handler){
         global $ID;
 
-        $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
-        $match = ($match == '.') ? $ID : $match;
+        if($match == '~~BACKLINKS~~') { //check for deprecated syntax
+            $match = $ID;
+        } else {
+            $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
+            $match = ($match == '.') ? $ID : $match;
 
-        if(strstr($match,".:")) {
-            resolve_pageid(getNS($ID),$match,$exists);
+            if(strstr($match,".:")) {
+                resolve_pageid(getNS($ID),$match,$exists);
+            }
         }
 
         return (array($match));
