@@ -10,8 +10,8 @@
  * 
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  Michael Klier <chi@chimeric.de>
+ * @author  Mark C. Prins <mprins@users.sf.net>
  */
-// must be run within DokuWiki
 if(!defined('DOKU_INC')) die();
 
 if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
@@ -25,54 +25,44 @@ require_once(DOKU_INC.'inc/parserutils.php');
  * need to inherit from this class
  */
 class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
-
-
     /**
-     * General Info
-     */
-    function getInfo(){
-        return array(
-            'author' => 'Michael Klier',
-            'email'  => 'chi@chimeric.de',
-            'date'   => @file_get_contents(DOKU_PLUGIN.'backlinks/VERSION'),
-            'name'   => 'Backlinks',
-            'desc'   => 'Displays backlinks to a given page.',
-            'url'    => 'http://dokuwiki.org/plugin:backlinks2'
-        );
-    }
-
-    /**
-     * Syntax Type
+     * Syntax Type.
      *
      * Needs to return one of the mode types defined in $PARSER_MODES in parser.php
+     * @see DokuWiki_Syntax_Plugin::getType()
      */
     function getType()  { return 'substition'; }
+
+    /**
+     * @see DokuWiki_Syntax_Plugin::getPType()
+     */
     function getPType() { return 'block'; }
+
+    /**
+     * @see Doku_Parser_Mode::getSort()
+     */
     function getSort()  { return 304; }
     
     /**
-     * Connect pattern to lexer
+     * Connect pattern to lexer.
+     * @see Doku_Parser_Mode::connectTo()
      */
     function connectTo($mode) {
         $this->Lexer->addSpecialPattern('\{\{backlinks>.+?\}\}', $mode, 'plugin_backlinks');
-        $this->Lexer->addSpecialPattern('~~BACKLINKS~~', $mode, 'plugin_backlinks');
     }
 
     /**
-     * Handler to prepare matched data for the rendering process
+     * Handler to prepare matched data for the rendering process.
+     * @see DokuWiki_Syntax_Plugin::handle()
      */
     function handle($match, $state, $pos, &$handler){
         global $ID;
 
-        if($match == '~~BACKLINKS~~') { //check for deprecated syntax
-            $match = $ID;
-        } else {
-            $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
-            $match = ($match == '.') ? $ID : $match;
+        $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
+        $match = ($match == '.') ? $ID : $match;
 
-            if(strstr($match,".:")) {
-                resolve_pageid(getNS($ID),$match,$exists);
-            }
+        if(strstr($match,".:")) {
+            resolve_pageid(getNS($ID),$match,$exists);
         }
 
         return (array($match));
@@ -80,6 +70,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
 
     /**
      * Handles the actual output creation.
+     * @see DokuWiki_Syntax_Plugin::render()
      */
     function render($mode, &$renderer, $data) {
         global $lang;
@@ -116,4 +107,3 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         return false;
     }
 }
-// vim:ts=4:sw=4:et:enc=utf-8:
