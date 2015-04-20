@@ -56,13 +56,23 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * @see DokuWiki_Syntax_Plugin::handle()
      */
     function handle($match, $state, $pos, &$handler){
+
+        // Take the id of the source
+        // It can be a rendering of a sidebar
+        global $INFO;
         global $ID;
+        $id = $ID;
+        // If it's a sidebar, get the original id.
+        if ($INFO != null) {
+            $id = $INFO['id'];
+        }
+
 
         $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
-        $match = ($match == '.') ? $ID : $match;
+        $match = ($match == '.') ? $id : $match;
 
         if(strstr($match,".:")) {
-            resolve_pageid(getNS($ID),$match,$exists);
+            resolve_pageid(getNS($id),$match,$exists);
         }
 
         return (array($match));
