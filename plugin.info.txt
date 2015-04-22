@@ -2,6 +2,6 @@ base    backlinks
 author  Mark C. Prins
 email   mprins@users.sf.net
 date    2015-04-20
-name    Backlinks
+name    Backlinks Plugin
 desc    Displays backlinks to a given page.
-url     http://www.dokuwiki.org/plugin:backlinks2
+url     https://www.dokuwiki.org/plugin:backlinks2
