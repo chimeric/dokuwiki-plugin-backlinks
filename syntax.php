@@ -55,7 +55,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * Handler to prepare matched data for the rendering process.
      * @see DokuWiki_Syntax_Plugin::handle()
      */
-    function handle($match, $state, $pos, &$handler){
+    function handle($match, $state, $pos, Doku_Handler $handler){
 
         // Take the id of the source
         // It can be a rendering of a sidebar
@@ -82,7 +82,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * Handles the actual output creation.
      * @see DokuWiki_Syntax_Plugin::render()
      */
-    function render($mode, &$renderer, $data) {
+    function render($mode, Doku_Renderer $renderer, $data) {
         global $lang;
 
         if($mode == 'xhtml'){
