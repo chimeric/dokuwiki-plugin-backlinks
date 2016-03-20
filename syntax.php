@@ -4,10 +4,11 @@
  *
  * Shows a list of pages that link back to a given page.
  *
- * Syntax:  {{backlinks>[pagename]}}
+ * Syntax:  {{backlinks>[pagename]#[filterNS]}}
  *
  *   [pagename] - a valid wiki pagename
- * 
+ *   [filterNS] - a valid,absolute namespace name, optionally prepended with ! to exclude
+ *
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
  * @author  Michael Klier <chi@chimeric.de>
  * @author  Mark C. Prins <mprins@users.sf.net>
@@ -42,7 +43,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
      * @see Doku_Parser_Mode::getSort()
      */
     function getSort()  { return 304; }
-    
+
     /**
      * Connect pattern to lexer.
      * @see Doku_Parser_Mode::connectTo()
@@ -67,15 +68,20 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
             $id = $INFO['id'];
         }
 
-
         $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
+
+        if(strstr($match, "#")){
+            $includeNS = substr(strstr($match, "#", FALSE), 1);
+            $match= strstr($match, "#", TRUE);
+        }
+
         $match = ($match == '.') ? $id : $match;
 
         if(strstr($match,".:")) {
             resolve_pageid(getNS($id),$match,$exists);
         }
 
-        return (array($match));
+        return (array($match, $includeNS));
     }
 
     /**
@@ -87,11 +93,25 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
 
         if($mode == 'xhtml'){
             $renderer->info['cache'] = false;
-            
+
             @require_once(DOKU_INC.'inc/fulltext.php');
             $backlinks = ft_backlinks($data[0]);
-            
+
             $renderer->doc .= '<div id="plugin__backlinks">' . DW_LF;
+
+            $filterNS = $data[1];
+            if(!empty($backlinks) && !empty($filterNS)) {
+                if (stripos($filterNS, "!", 0) === 0) {
+                    $filterNS = substr($filterNS, 1);
+                    $backlinks= array_filter($backlinks, function($ns) use($filterNS) {
+                        return stripos($ns, $filterNS, 0) !== 0;
+                    });
+                } else {
+                    $backlinks= array_filter($backlinks, function($ns) use($filterNS) {
+                        return stripos($ns, $filterNS, 0) === 0;
+                    });
+                }
+            }
 
             if(!empty($backlinks)) {
 
@@ -109,7 +129,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
             } else {
                 $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>";
             }
-            
+
             $renderer->doc .= '</div>' . DW_LF;
 
             return true;
