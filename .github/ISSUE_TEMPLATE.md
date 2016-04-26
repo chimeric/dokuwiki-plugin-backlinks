@@ -13,7 +13,7 @@ The following information is required:
 
 ## actual behaviour
 
-## steps to reproduce actaul behaviour
+## steps to reproduce actual behaviour
 
 ### error log
 <!-- replace ERRORS below with the relevant section of the php error -->
