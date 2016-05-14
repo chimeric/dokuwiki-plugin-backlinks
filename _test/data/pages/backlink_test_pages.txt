@@ -1,0 +1,9 @@
+====== All backlinks plugin test pages ======
+
+  * [[bob_ross_says|Bob Ross says]]
+  * [[backlinks_syntax|Backlinks to what Bob Ross says]]
+  * [[backlinks_include_syntax|Backlinks to what Bob Ross says (including only include namespace)]]
+  * [[backlinks_exclude_syntax|Backlinks to what Bob Ross says (excluding exclude namespace)]]
+  * [[link|A link to Bob Ross]]
+  * [[include:link|An included link to Bob Ross]]
+  * [[exclude:link|An excluded link to Bob Ross]]
