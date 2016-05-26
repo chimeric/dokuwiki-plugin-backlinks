@@ -49,11 +49,14 @@ class general_plugin_backlinks_test extends DokuWikiTest {
         $this->assertTrue(false !== strtotime($info['date']));
     }
 
+    /**
+     * test if plugin is loaded.
+     */
     public function test_plugin_backlinks_isloaded() {
         global $plugin_controller;
         $this->assertTrue(
-                     in_array('backlinks', $plugin_controller->getList()),
-                     "backlinks plugin is loaded"
-                     );
+                   in_array('backlinks', $plugin_controller->getList()),
+                   "backlinks plugin is loaded"
+                         );
     }
 }

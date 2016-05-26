@@ -31,71 +31,64 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
     public static function setUpBeforeClass(){
         parent::setUpBeforeClass();
         global $conf;
+        $conf['allowdebug'] = 1;
 
         TestUtils::rcopy(TMP_DIR, dirname(__FILE__) . '/data/');
 
-        dbglog(scandir(DOKU_TMP_DATA.'index/'),"Index dir (after copy)");
-        dbglog(scandir(DOKU_TMP_DATA.'pages/'),"Pages dir (before test)");
+        dbglog("\nset up class syntax_plugin_backlinks_test");
     }
 
     function setUp() {
-        global $conf;
-        //$this->pluginsEnabled[] = 'backlinks';
         parent::setUp();
 
-
+        global $conf;
         $conf['allowdebug'] = 1;
         $conf['cachetime'] = -1;
 
         $data = array();
         search($data, $conf['datadir'], 'search_allpages', array('skipacl' => true));
 
-        dbglog($data, "pages for indexing");
+        //dbglog($data, "pages for indexing");
 
         $verbose = false;
         $force = false;
-        //foreach($data as $val) {
-        //    idx_addPage($val['id'], $verbose, $force);
-        //}
-        idx_addPage('wiki:dokuwiki', $verbose, $force);
-        idx_addPage('bob_ross_says', $verbose, $force);
-        idx_addPage('link', $verbose, $force);
-        idx_addPage('backlinks_syntax', $verbose, $force);
+        foreach($data as $val) {
+            idx_addPage($val['id'], $verbose, $force);
+        }
+        //idx_addPage('bob_ross_says', $verbose, $force);
+        //idx_addPage('link', $verbose, $force);
+        //idx_addPage('backlinks_syntax', $verbose, $force);
+        if($conf['allowdebug']) {
+            touch(DOKU_TMP_DATA.'cache/debug.log');
+        }
     }
 
     public function tearDown() {
-        global $conf;
         parent::tearDown();
 
-        // try to get the debug log
-
-        //$log = file_get_contents($conf['cachedir'].'/debug.log');
-        $log = file_get_contents(DOKU_TMP_DATA.'/cache/debug.log');
-        if(!$log) {
-            print_r($log);
-            unlink($conf['cachedir'].'/debug.log');
+        global $conf;
+        // try to get the debug log after running the test, print and clear
+        if($conf['allowdebug']) {
+            print "\n";
+            readfile(DOKU_TMP_DATA.'cache/debug.log');
+            unlink(DOKU_TMP_DATA.'cache/debug.log');
         }
     }
 
     public function testIndex() {
-        $indexer = idx_get_indexer();
-        $query = array('Ross');
-
-        print_r(idx_lookup($query));
-
+        $query = array('ross');
         $this->assertEquals(
-                 array('Ross' => array('link' => 1)),
+                 array('ross' => array(
+                    'link' => '3',
+                    'bob_ross_says' => '1',
+                    'backlinks_syntax' => '2',
+                    'backlinks_include_syntax' => '2',
+                    'backlinks_exclude_syntax' => '2',
+                    'backlink_test_pages' => '8',
+                    'include:link' => '3',
+                    'exclude:link' => '3'
+                    )),
                  idx_lookup($query)
-        );
-
-    }
-
-    public function testDokuWikiPage() {
-        $request = new TestRequest();
-        $response = $request->get(array('id'=>'wiki:dokuwiki'), '/doku.php');
-        $this->assertTrue(
-            strpos($response->getContent(), 'DokuWiki') !== false,
-            'DokuWiki was not a word in the output'
         );
     }
 
@@ -105,7 +98,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
 
         $this->assertTrue(
             strpos($response->getContent(), 'A link to Bob Ross') !== false,
-            'A link to Bob Ross was not in the output'
+            '"A link to Bob Ross" was not in the output'
         );
      }
 
@@ -115,7 +108,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
 
         $this->assertTrue(
             strpos($response->getContent(), 'Bob Ross says') !== false,
-            'Bob Ross says was not in the output'
+            '"Bob Ross says" was not in the output'
         );
     }
 
@@ -129,15 +122,27 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         );
 
         $doc = phpQuery::newDocument($response->getContent());
-        //look for id="plugin__backlinks"
-        $this->assertEquals(1, pq('#plugin__backlinks', $doc)->length,
-                            'There should be one backlinks element');
+        // look for id="plugin__backlinks"
+        $this->assertEquals(
+                            1,
+                            pq('#plugin__backlinks', $doc)->length,
+                            'There should be one backlinks element'
+                           );
 
-        $wikilink = pq('.idx .li .wikilink1', $doc);
-        $this->assertEquals(4, $wikilink->length, 'There should be 4 backlinks');
+        $wikilinks = pq('#plugin__backlinks ul li', $doc);
+        dbglog($wikilinks->text(), 'found backlinks');
+        $this->assertEquals(
+                            4,
+                            $wikilinks->contents()->length,
+                            'There should be 4 backlinks'
+                           );
 
-        dbglog(pq($wikilink->contents()[0], $doc),"wikilink[0]");
-        $this->assertEquals($wikilink->contents()[3],'A link to Bob Ross',
-                           'The last backlink should be a link to Bob Ross');
+        $lastlink = pq('a:last',$wikilinks);
+        dbglog($lastlink->text(),"last backlink");
+        $this->assertEquals(
+                            $lastlink->text(),
+                            'A link to Bob Ross',
+                            'The last backlink should be a link to Bob Ross'
+                           );
     }
 }

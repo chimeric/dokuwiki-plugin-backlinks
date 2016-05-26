@@ -129,12 +129,12 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
                     $renderer->doc .= '<li><div class="li">';
                     //$renderer->doc .= html_wikilink(':'.$backlink, $name);
                     $renderer->doc .= '<a href="'.wl(':'.$backlink).'">'.$name.'</a>';
-                    $renderer->doc .= '</div></li>';
+                    $renderer->doc .= '</div></li>' . DW_LF;
                 }
 
-                $renderer->doc .= '</ul>';
+                $renderer->doc .= '</ul>' . DW_LF;
             } else {
-                $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>";
+                $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>" . DW_LF;
             }
 
             $renderer->doc .= '</div>' . DW_LF;
