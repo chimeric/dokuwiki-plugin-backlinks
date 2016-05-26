@@ -23,4 +23,5 @@ script:
 
 matrix:
   allow_failures:
-     - env: DOKUWIKI=old-stable
+    - php: "7.0"
+      env: DOKUWIKI=old-stable
