@@ -1,12 +1,12 @@
 <?php
 /**
- * DokuWiki Syntax Plugin Backlinks
+ * DokuWiki Syntax Plugin Backlinks.
  *
  * Shows a list of pages that link back to a given page.
  *
- * Syntax:  {{backlinks>[pagename]#[filterNS]}}
+ * Syntax:  {{backlinks>[pagename][#filterNS|!#filterNS]}}
  *
- *   [pagename] - a valid wiki pagename
+ *   [pagename] - a valid wiki pagename or a . for the current page
  *   [filterNS] - a valid,absolute namespace name, optionally prepended with ! to exclude
  *
  * @license GPL 2 (http://www.gnu.org/licenses/gpl.html)
@@ -97,37 +97,44 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
             @require_once(DOKU_INC.'inc/fulltext.php');
             $backlinks = ft_backlinks($data[0]);
 
+            dbglog($backlinks, "backlinks: all backlinks to: $data[0]");
+
             $renderer->doc .= '<div id="plugin__backlinks">' . DW_LF;
 
             $filterNS = $data[1];
             if(!empty($backlinks) && !empty($filterNS)) {
                 if (stripos($filterNS, "!", 0) === 0) {
                     $filterNS = substr($filterNS, 1);
+                    dbglog($filterNS, "backlinks: exluding all of namespace: $filterNS");
                     $backlinks= array_filter($backlinks, function($ns) use($filterNS) {
                         return stripos($ns, $filterNS, 0) !== 0;
                     });
                 } else {
+                    dbglog($filterNS, "backlinks: including namespace: $filterNS only");
                     $backlinks= array_filter($backlinks, function($ns) use($filterNS) {
                         return stripos($ns, $filterNS, 0) === 0;
                     });
                 }
             }
 
+            dbglog($backlinks, "backlinks: all backlinks to be rendered");
+
             if(!empty($backlinks)) {
 
                 $renderer->doc .= '<ul class="idx">';
 
                 foreach($backlinks as $backlink){
-                    $name = p_get_metadata($backlink,'title');
+                    $name = p_get_metadata($backlink, 'title');
                     if(empty($name)) $name = $backlink;
                     $renderer->doc .= '<li><div class="li">';
-                    $renderer->doc .= html_wikilink(':'.$backlink,$name,'');
-                    $renderer->doc .= '</div></li>';
+                    //$renderer->doc .= html_wikilink(':'.$backlink, $name);
+                    $renderer->doc .= '<a href="'.wl(':'.$backlink).'">'.$name.'</a>';
+                    $renderer->doc .= '</div></li>' . DW_LF;
                 }
 
-                $renderer->doc .= '</ul>';
+                $renderer->doc .= '</ul>' . DW_LF;
             } else {
-                $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>";
+                $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>" . DW_LF;
             }
 
             $renderer->doc .= '</div>' . DW_LF;
