@@ -1,0 +1,5 @@
+====== Backlinks from pages in /aaa/bbb/cc/ ======
+
+== backlinks to this page from namespace aaa:bbb:cc ==
+
+{{backlinks>.#aaa:bbb:cc}}

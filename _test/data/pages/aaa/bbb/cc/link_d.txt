@@ -1,0 +1,3 @@
+====== linking to a page d ======
+
+This is [[:mmm:nnn:ooo:start|link to a start page]].

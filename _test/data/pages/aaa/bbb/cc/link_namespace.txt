@@ -1,0 +1,3 @@
+====== linking to a namespace ======
+
+This is [[:mmm:nnn:ooo:|link to a namespace]].
