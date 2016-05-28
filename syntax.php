@@ -13,10 +13,10 @@
  * @author  Michael Klier <chi@chimeric.de>
  * @author  Mark C. Prins <mprins@users.sf.net>
  */
-if(!defined('DOKU_INC')) die();
+if (!defined('DOKU_INC')) die();
 
-if(!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN',DOKU_INC.'lib/plugins/');
-if(!defined('DW_LF')) define('DW_LF',"\n");
+if (!defined('DOKU_PLUGIN')) define('DOKU_PLUGIN', DOKU_INC.'lib/plugins/');
+if (!defined('DW_LF')) define('DW_LF', "\n");
 
 require_once(DOKU_PLUGIN.'syntax.php');
 require_once(DOKU_INC.'inc/parserutils.php');
@@ -68,7 +68,8 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
             $id = $INFO['id'];
         }
 
-        $match = substr($match,12,-2); //strip {{backlinks> from start and }} from end
+        // strip {{backlinks> from start and }} from end
+        $match = substr($match,12,-2);
 
         if(strstr($match, "#")){
             $includeNS = substr(strstr($match, "#", FALSE), 1);
@@ -127,8 +128,7 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
                     $name = p_get_metadata($backlink, 'title');
                     if(empty($name)) $name = $backlink;
                     $renderer->doc .= '<li><div class="li">';
-                    //$renderer->doc .= html_wikilink(':'.$backlink, $name);
-                    $renderer->doc .= '<a href="'.wl(':'.$backlink).'">'.$name.'</a>';
+                    $renderer->doc .= html_wikilink(':'.$backlink, $name);
                     $renderer->doc .= '</div></li>' . DW_LF;
                 }
 
