@@ -132,7 +132,9 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
 
                 foreach ($backlinks as $backlink) {
                     $name = p_get_metadata($backlink, 'title');
-                    if (empty($name)) $name = $backlink;
+                    if (empty($name)) {
+                        $name = $backlink;
+                    }
                     $renderer->doc .= '<li><div class="li">';
                     $renderer->doc .= html_wikilink(':'.$backlink, $name);
                     $renderer->doc .= '</div></li>'.DW_LF;

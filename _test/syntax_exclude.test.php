@@ -52,11 +52,11 @@ class syntax_exclude_plugin_backlinks_test extends DokuWikiTest {
 
         $verbose = false;
         $force = false;
-        foreach($data as $val) {
+        foreach ($data as $val) {
             idx_addPage($val['id'], $verbose, $force);
         }
 
-        if($conf['allowdebug']) {
+        if ($conf['allowdebug']) {
             touch(DOKU_TMP_DATA.'cache/debug.log');
         }
     }

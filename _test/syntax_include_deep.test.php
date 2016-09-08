@@ -52,11 +52,11 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
 
         $verbose = false;
         $force = false;
-        foreach($data as $val) {
+        foreach ($data as $val) {
             idx_addPage($val['id'], $verbose, $force);
         }
 
-        if($conf['allowdebug']) {
+        if ($conf['allowdebug']) {
             touch(DOKU_TMP_DATA.'cache/debug.log');
         }
     }
@@ -103,7 +103,7 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
                             5,
                             $wikilinks->contents()->length,
                             'There should be 5 backlinks'
-                           );
+                            );
 
         $lastlink = pq('a:last', $wikilinks);
         dbglog($lastlink->text(), "last backlink");
@@ -111,6 +111,6 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
                             $lastlink->text(),
                             'linking to a namespace',
                             'The last backlink should be "linking to a namespace"'
-                           );
+                            );
     }
 }
