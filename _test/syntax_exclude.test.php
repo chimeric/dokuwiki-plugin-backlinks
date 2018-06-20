@@ -96,7 +96,7 @@ class syntax_exclude_plugin_backlinks_test extends DokuWikiTest {
                             1,
                             pq('#plugin__backlinks', $doc)->length,
                             'There should be one backlinks element'
-                            );
+                           );
 
         $wikilinks = pq('#plugin__backlinks ul li', $doc);
         dbglog($wikilinks->text(), 'found backlinks');

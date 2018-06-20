@@ -83,17 +83,17 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         global $INFO;
         global $ID;
 
-	$id = $ID;
-        // If it's a sidebar, get the original id.
-        if ($INFO != null) {
-            $id = $INFO['id'];
+        $id = $ID;
+            // If it's a sidebar, get the original id.
+            if ($INFO != null) {
+                $id = $INFO['id'];
+            }
+        $match = $data[0];
+        $match = ($match == '.') ? $id : $match;
+            if (strstr($match, ".:")) {
+                resolve_pageid(getNS($id), $match, $exists);
         }
-	$match = $data[0];
-	$match = ($match == '.') ? $id : $match;
-        if (strstr($match, ".:")) {
-            resolve_pageid(getNS($id), $match, $exists);
-	}
-	    
+
         if ($mode == 'xhtml') {
             $renderer->info['cache'] = false;
 
