@@ -2,7 +2,7 @@
 
 Add lists of backlinks to a page.
 
-All documentation for the Backlinks Plugin is available online at: http://dokuwiki.org/plugin:backlinks2
+All documentation for the Backlinks Plugin is available online at: http://dokuwiki.org/plugin:backlinks
 
 See COPYING for license info.
 
