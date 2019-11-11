@@ -1,20 +1,11 @@
-dist: trusty
 language: php
 
 php:
+  - "7.3"
   - "7.2"
   - "7.1"
   - "7.0"
   - "5.6"
-  - "hhvm"
-
-matrix:
-  allow_failures:
-    - php: "hhvm"
-    - php: "7.2"
-      env: DOKUWIKI=stable
-    - php: "7.1"
-      env: DOKUWIKI=stable
 
 env:
   - DOKUWIKI=master
@@ -26,5 +17,8 @@ before_install:
 install:
   - sh travis.sh
 
+before_script:
+  - ./_test/phpunit.phar --version
+
 script:
-  - cd _test && PRESERVE_TMP=false phpunit --stderr --group plugin_backlinks --verbose --debug
+  - cd _test && PRESERVE_TMP=false ./phpunit.phar --stderr --group plugin_backlinks --verbose --debug
