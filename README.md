@@ -6,7 +6,7 @@ All documentation for the Backlinks Plugin is available online at: http://dokuwi
 
 See COPYING for license info.
 
-[![Build Status](https://travis-ci.com/mprins/dokuwiki-plugin-backlinks.svg?branch=master)](https://travis-ci.com/mprins/dokuwiki-plugin-backlinks)
+[![CI](https://github.com/mprins/dokuwiki-plugin-backlinks/actions/workflows/CI.yml/badge.svg)](https://github.com/mprins/dokuwiki-plugin-backlinks/actions/workflows/CI.yml)
 [![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/mprins/dokuwiki-plugin-backlinks/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/mprins/dokuwiki-plugin-backlinks/?branch=master)
 [![GitHub issues](https://img.shields.io/github/issues/mprins/dokuwiki-plugin-backlinks.svg)](https://github.com/mprins/dokuwiki-plugin-backlinks/issues)
 [![GitHub forks](https://img.shields.io/github/forks/mprins/dokuwiki-plugin-backlinks.svg)](https://github.com/mprins/dokuwiki-plugin-backlinks/network)
