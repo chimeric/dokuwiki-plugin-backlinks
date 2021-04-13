@@ -28,7 +28,7 @@ class syntax_exclude_plugin_backlinks_test extends DokuWikiTest {
     /**
      * copy data.
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         parent::setUpBeforeClass();
         global $conf;
         $conf['allowdebug'] = 1;
@@ -38,7 +38,7 @@ class syntax_exclude_plugin_backlinks_test extends DokuWikiTest {
         dbglog("\nset up class syntax_plugin_backlinks_test");
     }
 
-    function setUp() {
+    function setUp(): void {
         parent::setUp();
 
         global $conf;
@@ -61,7 +61,7 @@ class syntax_exclude_plugin_backlinks_test extends DokuWikiTest {
         }
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         parent::tearDown();
 
         global $conf;
@@ -74,7 +74,7 @@ class syntax_exclude_plugin_backlinks_test extends DokuWikiTest {
     }
 
 
-    public function testExclude() {
+    public function testExclude(): void {
         $request = new TestRequest();
         $response = $request->get(array('id'=>'backlinks_exclude_syntax'), '/doku.php');
 
