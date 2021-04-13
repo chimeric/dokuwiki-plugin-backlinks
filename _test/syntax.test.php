@@ -28,7 +28,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
     /**
      * copy data and add pages to the index.
      */
-    public static function setUpBeforeClass() {
+    public static function setUpBeforeClass(): void {
         parent::setUpBeforeClass();
         global $conf;
         $conf['allowdebug'] = 1;
@@ -38,7 +38,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         dbglog("\nset up class syntax_plugin_backlinks_test");
     }
 
-    function setUp() {
+    function setUp(): void {
         parent::setUp();
 
         global $conf;
@@ -63,7 +63,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         }
     }
 
-    public function tearDown() {
+    public function tearDown(): void {
         parent::tearDown();
 
         global $conf;
@@ -75,7 +75,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         }
     }
 
-    public function testIndex() {
+    public function testIndex(): void {
         $query = array('ross');
         $this->assertEquals(
                     array('ross' => array(
@@ -92,7 +92,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         );
     }
 
-    public function testLinksPage() {
+    public function testLinksPage(): void {
         $request = new TestRequest();
         $response = $request->get(array('id'=>'link'), '/doku.php');
 
@@ -102,7 +102,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         );
         }
 
-    public function testStoryPage() {
+    public function testStoryPage(): void {
         $request = new TestRequest();
         $response = $request->get(array('id'=>'bob_ross_says'), '/doku.php');
 
@@ -112,7 +112,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         );
     }
 
-    public function testBacklinks() {
+    public function testBacklinks(): void {
         $request = new TestRequest();
         $response = $request->get(array('id'=>'backlinks_syntax'), '/doku.php');
 
