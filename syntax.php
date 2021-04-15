@@ -63,9 +63,9 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         $match = substr($match, 12, -2);
 
         $includeNS = '';
-        if (strstr($match, "#")) {
-            $includeNS = substr(strstr($match, "#", FALSE), 1);
-            $match = strstr($match, "#", TRUE);
+        if(strstr($match, "#")) {
+            $includeNS = substr(strstr($match, "#", false), 1);
+            $match     = strstr($match, "#", true);
         }
 
         return (array($match, $includeNS));
@@ -82,63 +82,67 @@ class syntax_plugin_backlinks extends DokuWiki_Syntax_Plugin {
         global $ID;
 
         $id = $ID;
-            // If it's a sidebar, get the original id.
-            if ($INFO != null) {
-                $id = $INFO['id'];
-            }
+        // If it's a sidebar, get the original id.
+        if($INFO != null) {
+            $id = $INFO['id'];
+        }
         $match = $data[0];
         $match = ($match == '.') ? $id : $match;
-            if (strstr($match, ".:")) {
-                resolve_pageid(getNS($id), $match, $exists);
+        if(strstr($match, ".:")) {
+            resolve_pageid(getNS($id), $match, $exists);
         }
 
-        if ($mode == 'xhtml') {
+        if($mode == 'xhtml') {
             $renderer->info['cache'] = false;
 
             $backlinks = ft_backlinks($match);
 
             dbglog($backlinks, "backlinks: all backlinks to: $match");
 
-            $renderer->doc .= '<div id="plugin__backlinks">'."\n";
+            $renderer->doc .= '<div id="plugin__backlinks">' . "\n";
 
             $filterNS = $data[1];
-            if (!empty($backlinks) && !empty($filterNS)) {
-                if (stripos($filterNS, "!", 0) === 0) {
+            if(!empty($backlinks) && !empty($filterNS)) {
+                if(stripos($filterNS, "!", 0) === 0) {
                     $filterNS = substr($filterNS, 1);
                     dbglog($filterNS, "backlinks: exluding all of namespace: $filterNS");
-                    $backlinks = array_filter($backlinks, function ($ns) use ($filterNS) {
+                    $backlinks = array_filter(
+                        $backlinks, function ($ns) use ($filterNS) {
                         return stripos($ns, $filterNS, 0) !== 0;
-                    });
+                    }
+                    );
                 } else {
                     dbglog($filterNS, "backlinks: including namespace: $filterNS only");
-                    $backlinks = array_filter($backlinks, function ($ns) use ($filterNS) {
+                    $backlinks = array_filter(
+                        $backlinks, function ($ns) use ($filterNS) {
                         return stripos($ns, $filterNS, 0) === 0;
-                    });
+                    }
+                    );
                 }
             }
 
             dbglog($backlinks, "backlinks: all backlinks to be rendered");
 
-            if (!empty($backlinks)) {
+            if(!empty($backlinks)) {
 
                 $renderer->doc .= '<ul class="idx">';
 
-                foreach ($backlinks as $backlink) {
+                foreach($backlinks as $backlink) {
                     $name = p_get_metadata($backlink, 'title');
-                    if (empty($name)) {
+                    if(empty($name)) {
                         $name = $backlink;
                     }
                     $renderer->doc .= '<li><div class="li">';
-                    $renderer->doc .= html_wikilink(':'.$backlink, $name);
-                    $renderer->doc .= '</div></li>'."\n";
+                    $renderer->doc .= html_wikilink(':' . $backlink, $name);
+                    $renderer->doc .= '</div></li>' . "\n";
                 }
 
-                $renderer->doc .= '</ul>'."\n";
+                $renderer->doc .= '</ul>' . "\n";
             } else {
-                $renderer->doc .= "<strong>Plugin Backlinks: ".$lang['nothingfound']."</strong>"."\n";
+                $renderer->doc .= "<strong>Plugin Backlinks: " . $lang['nothingfound'] . "</strong>" . "\n";
             }
 
-            $renderer->doc .= '</div>'."\n";
+            $renderer->doc .= '</div>' . "\n";
 
             return true;
         }

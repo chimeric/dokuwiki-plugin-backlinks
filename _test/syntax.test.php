@@ -33,7 +33,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         global $conf;
         $conf['allowdebug'] = 1;
 
-        TestUtils::rcopy(TMP_DIR, dirname(__FILE__).'/data/');
+        TestUtils::rcopy(TMP_DIR, dirname(__FILE__) . '/data/');
 
         dbglog("\nset up class syntax_plugin_backlinks_test");
     }
@@ -43,7 +43,7 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
 
         global $conf;
         $conf['allowdebug'] = 1;
-        $conf['cachetime'] = -1;
+        $conf['cachetime']  = -1;
 
         $data = array();
         search($data, $conf['datadir'], 'search_allpages', array('skipacl' => true));
@@ -51,15 +51,15 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         //dbglog($data, "pages for indexing");
 
         $verbose = false;
-        $force = false;
-        foreach ($data as $val) {
+        $force   = false;
+        foreach($data as $val) {
             idx_addPage($val['id'], $verbose, $force);
         }
         //idx_addPage('bob_ross_says', $verbose, $force);
         //idx_addPage('link', $verbose, $force);
         //idx_addPage('backlinks_syntax', $verbose, $force);
-        if ($conf['allowdebug']) {
-            touch(DOKU_TMP_DATA.'cache/debug.log');
+        if($conf['allowdebug']) {
+            touch(DOKU_TMP_DATA . 'cache/debug.log');
         }
     }
 
@@ -68,43 +68,45 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
 
         global $conf;
         // try to get the debug log after running the test, print and clear
-        if ($conf['allowdebug']) {
+        if($conf['allowdebug']) {
             print "\n";
-            readfile(DOKU_TMP_DATA.'cache/debug.log');
-            unlink(DOKU_TMP_DATA.'cache/debug.log');
+            readfile(DOKU_TMP_DATA . 'cache/debug.log');
+            unlink(DOKU_TMP_DATA . 'cache/debug.log');
         }
     }
 
     public function testIndex(): void {
         $query = array('ross');
         $this->assertEquals(
-                    array('ross' => array(
-                    'link' => '3',
-                    'bob_ross_says' => '1',
-                    'backlinks_syntax' => '2',
+            array(
+                'ross' => array(
+                    'link'                     => '3',
+                    'bob_ross_says'            => '1',
+                    'backlinks_syntax'         => '2',
                     'backlinks_include_syntax' => '2',
                     'backlinks_exclude_syntax' => '2',
-                    'backlink_test_pages' => '8',
-                    'include:link' => '3',
-                    'exclude:link' => '3'
-                    )),
-                    idx_lookup($query)
+                    'backlink_test_pages'      => '8',
+                    'include:link'             => '3',
+                    'exclude:link'             => '3'
+                )
+            ),
+            idx_lookup($query)
         );
     }
 
     public function testLinksPage(): void {
-        $request = new TestRequest();
-        $response = $request->get(array('id'=>'link'), '/doku.php');
+        $request  = new TestRequest();
+        $response = $request->get(array('id' => 'link'), '/doku.php');
 
         $this->assertTrue(
             strpos($response->getContent(), 'A link to Bob Ross') !== false,
             '"A link to Bob Ross" was not in the output'
         );
-        }
+    }
 
     public function testStoryPage(): void {
-        $request = new TestRequest();
-        $response = $request->get(array('id'=>'bob_ross_says'), '/doku.php');
+        $request  = new TestRequest();
+        $response = $request->get(array('id' => 'bob_ross_says'), '/doku.php');
 
         $this->assertTrue(
             strpos($response->getContent(), 'Bob Ross says') !== false,
@@ -113,8 +115,8 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
     }
 
     public function testBacklinks(): void {
-        $request = new TestRequest();
-        $response = $request->get(array('id'=>'backlinks_syntax'), '/doku.php');
+        $request  = new TestRequest();
+        $response = $request->get(array('id' => 'backlinks_syntax'), '/doku.php');
 
         $this->assertTrue(
             strpos($response->getContent(), 'Backlinks to what Bob Ross says') !== false,
@@ -124,25 +126,25 @@ class syntax_plugin_backlinks_test extends DokuWikiTest {
         $doc = phpQuery::newDocument($response->getContent());
         // look for id="plugin__backlinks"
         $this->assertEquals(
-                            1,
-                            pq('#plugin__backlinks', $doc)->length,
-                            'There should be one backlinks element'
-                           );
+            1,
+            pq('#plugin__backlinks', $doc)->length,
+            'There should be one backlinks element'
+        );
 
         $wikilinks = pq('#plugin__backlinks ul li', $doc);
         dbglog($wikilinks->text(), 'found backlinks');
         $this->assertEquals(
-                            4,
-                            $wikilinks->contents()->length,
-                            'There should be 4 backlinks'
-                           );
+            4,
+            $wikilinks->contents()->length,
+            'There should be 4 backlinks'
+        );
 
         $lastlink = pq('a:last', $wikilinks);
         dbglog($lastlink->text(), "last backlink");
         $this->assertEquals(
-                            $lastlink->text(),
-                            'A link to Bob Ross',
-                            'The last backlink should be a link to Bob Ross'
-                           );
+            $lastlink->text(),
+            'A link to Bob Ross',
+            'The last backlink should be a link to Bob Ross'
+        );
     }
 }
