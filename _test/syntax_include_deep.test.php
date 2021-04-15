@@ -33,7 +33,7 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
         global $conf;
         $conf['allowdebug'] = 1;
 
-        TestUtils::rcopy(TMP_DIR, dirname(__FILE__).'/data/');
+        TestUtils::rcopy(TMP_DIR, dirname(__FILE__) . '/data/');
 
         dbglog("\nset up class syntax_plugin_backlinks_test");
     }
@@ -43,7 +43,7 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
 
         global $conf;
         $conf['allowdebug'] = 1;
-        $conf['cachetime'] = -1;
+        $conf['cachetime']  = -1;
 
         $data = array();
         search($data, $conf['datadir'], 'search_allpages', array('skipacl' => true));
@@ -51,13 +51,13 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
         //dbglog($data, "pages for indexing");
 
         $verbose = false;
-        $force = false;
-        foreach ($data as $val) {
+        $force   = false;
+        foreach($data as $val) {
             idx_addPage($val['id'], $verbose, $force);
         }
 
-        if ($conf['allowdebug']) {
-            touch(DOKU_TMP_DATA.'cache/debug.log');
+        if($conf['allowdebug']) {
+            touch(DOKU_TMP_DATA . 'cache/debug.log');
         }
     }
 
@@ -66,16 +66,16 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
 
         global $conf;
         // try to get the debug log after running the test, print and clear
-        if ($conf['allowdebug']) {
+        if($conf['allowdebug']) {
             print "\n";
-            readfile(DOKU_TMP_DATA.'cache/debug.log');
-            unlink(DOKU_TMP_DATA.'cache/debug.log');
+            readfile(DOKU_TMP_DATA . 'cache/debug.log');
+            unlink(DOKU_TMP_DATA . 'cache/debug.log');
         }
     }
 
     public function testInclude(): void {
-        $request = new TestRequest();
-        $response = $request->get(array('id'=>'mmm:nnn:ooo:start'), '/doku.php');
+        $request  = new TestRequest();
+        $response = $request->get(array('id' => 'mmm:nnn:ooo:start'), '/doku.php');
 
         $this->assertTrue(
             strpos($response->getContent(), 'Backlinks from pages in /aaa/bbb/cc/') !== false,
@@ -87,30 +87,28 @@ class syntax_include_deep_plugin_backlinks_test extends DokuWikiTest {
             '"linking to a page form aaa" should not be in the output'
         );
 
-
-
         $doc = phpQuery::newDocument($response->getContent());
         // look for id="plugin__backlinks"
         $this->assertEquals(
-                            1,
-                            pq('#plugin__backlinks', $doc)->length,
-                            'There should be one backlinks element'
-                           );
+            1,
+            pq('#plugin__backlinks', $doc)->length,
+            'There should be one backlinks element'
+        );
 
         $wikilinks = pq('#plugin__backlinks ul li', $doc);
         dbglog($wikilinks->text(), 'found backlinks');
         $this->assertEquals(
-                            5,
-                            $wikilinks->contents()->length,
-                            'There should be 5 backlinks'
-                           );
+            5,
+            $wikilinks->contents()->length,
+            'There should be 5 backlinks'
+        );
 
         $lastlink = pq('a:last', $wikilinks);
         dbglog($lastlink->text(), "last backlink");
         $this->assertEquals(
-                            $lastlink->text(),
-                            'linking to a namespace',
-                            'The last backlink should be "linking to a namespace"'
-                           );
+            $lastlink->text(),
+            'linking to a namespace',
+            'The last backlink should be "linking to a namespace"'
+        );
     }
 }
