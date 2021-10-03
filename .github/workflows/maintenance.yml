@@ -1,4 +1,4 @@
-name: 'Repository Maintainance'
+name: 'Repository Maintenance'
 
 on:
   schedule:
